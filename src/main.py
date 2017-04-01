@@ -1,49 +1,33 @@
 import heapq
 import re
 
-from common_methods import gen_data_rows
+from common_methods import (gen_data_rows, parse_log_row)
 from config import PATH_LOG_INPUT_FILE, regex_pattern
+from feature_1 import feature_1
+from feature_2 import feature_2
 from trie import Trie
 
 
-def feature_1(log_file: str=PATH_LOG_INPUT_FILE, top_x=10):
-    host_trie = Trie()
-    heap = []
+def main(log_file: str=PATH_LOG_INPUT_FILE, top_n: int=10):
     compiled_regex = re.compile(regex_pattern)
+    host_trie = Trie()
+    resource_trie = Trie()
+    most_active_address_heap = []
+    most_active_resource_heap = []
 
     for line in gen_data_rows(log_file):
-        regex_object = re.search(compiled_regex, line)
-        line_dict = regex_object.groupdict()
-        node = host_trie.add(line_dict["host"])
-        print(node.is_in_heap, heap)
-
-        if len(heap) < top_x:
-            if node.is_in_heap:
-                for index, (count, heap_node) in enumerate(heap):
-                    if node.data == heap_node.data:
-                        heap[index] = (node.count, node)
-                        heapq.heapify(heap)
-                        break
-            else:
-                node.is_in_heap = True
-                heapq.heappush(heap,
-                               (node.count, node))
-        else:
-            if node.is_in_heap:
-                for index, (count, heap_node) in enumerate(heap):
-                    if node.data == heap_node.data:
-                        heap[index] = (node.count, node)
-                        heapq.heapify(heap)
-                        break
-            else:
-                min_count_of_heap = heap[0][0]
-                if node.count > min_count_of_heap:
-                    node.is_in_heap = True
-                    count, popped_node = heapq.heappushpop(heap,
-                                                           (node.count, node))
-                    popped_node.is_in_heap = False
-    heapq.nlargest(top_x, heap)
-    print([host for count, host in heap])
+        print(line)
+        parsed_line = parse_log_row(line, compiled_regex)
+        feature_1(host_trie,
+                  most_active_address_heap,
+                  parsed_line,
+                  top_n)
+        feature_2(resource_trie,
+                  most_active_resource_heap,
+                  parsed_line,
+                  top_n)
+    print([(node.data, count) for count, node in heapq.nlargest(top_n, most_active_address_heap)])
+    print([(node.data, count) for count, node in heapq.nlargest(top_n, most_active_resource_heap)])
 
 if __name__ == '__main__':
-    print(feature_1())
+    main()

@@ -15,13 +15,16 @@ class Node(dict):
     def add_child(self, key: str, data: Optional[str]=None):
         self[key] = Node(key, data)
 
+    def increment_priority(self, priority_incrementer):
+        self.count += priority_incrementer
+
 
 class Trie:
 
     def __init__(self):
         self.head = Node()
 
-    def add(self, item: str):
+    def add(self, item: str, priority_incrementer: int=1):
         current_node = self.head
         item_finished = True
 
@@ -40,6 +43,6 @@ class Trie:
                 current_node = current_node[char]
                 index += 1
 
-        current_node.count += 1
+        current_node.increment_priority(priority_incrementer)
         current_node.data = item
         return current_node
