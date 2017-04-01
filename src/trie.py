@@ -11,11 +11,8 @@ class Node(dict):
         self.data = data
         self.count = 0
 
-    def add_child(self, key: Union[Node, str], data: Optional[str]=None):
-        if isinstance(key, Node):
-            self[key.label] = key
-        else:
-            self[key] = Node(key, data)
+    def add_child(self, key: str, data: Optional[str]=None):
+        self[key] = Node(key, data)
 
 
 class Trie:
@@ -25,18 +22,17 @@ class Trie:
 
     def add(self, item):
         current_node = self.head
-        item_finished = False
-        index = 0
+        item_finished = True
 
-        while index < len(item):
+        for index in range(len(item)):
             char = item[index]
-            if item[index] in current_node:
+            if char in current_node:
                 current_node = current_node[char]
             else:
-                item_finished = True
+                item_finished = False
                 break
 
-        if item_finished:
+        if not item_finished:
             while index < len(item):
                 char = item[index]
                 current_node.add_child(char)
