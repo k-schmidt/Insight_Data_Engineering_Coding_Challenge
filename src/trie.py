@@ -10,6 +10,7 @@ class Node(dict):
         self.label = label
         self.data = data
         self.count = 0
+        self.is_in_heap = False
 
     def add_child(self, key: str, data: Optional[str]=None):
         self[key] = Node(key, data)
@@ -20,7 +21,7 @@ class Trie:
     def __init__(self):
         self.head = Node()
 
-    def add(self, item):
+    def add(self, item: str):
         current_node = self.head
         item_finished = True
 
