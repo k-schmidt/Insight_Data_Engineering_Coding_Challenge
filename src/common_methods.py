@@ -4,8 +4,10 @@ Common methods applicable to all problems.
 Kyle Schmidt
 Insight Data Engineering Coding Challenge
 """
+from datetime import datetime
+import heapq
 import re
-from typing import Dict
+from typing import Dict, Generator, List, Tuple
 
 from trie import Node
 
@@ -120,3 +122,9 @@ def append_to_heap(node: Node,
                 count, popped_node = heapq.heappushpop(heap,
                                                        (node.count, node))
                 popped_node.is_in_heap = False
+
+
+def date_to_datetime(timestamp_str: str) -> datetime:
+    timestamp_pattern = "%d/%b/%Y:%H:%M:%S -0400"
+    datetime_obj = datetime.strptime(timestamp_str, timestamp_pattern)
+    return datetime_obj
