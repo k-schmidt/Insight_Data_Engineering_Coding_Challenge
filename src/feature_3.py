@@ -6,16 +6,19 @@ Insight Data Engineering Coding Challenge
 """
 from datetime import timedelta, datetime
 import heapq
-from typing import Dict, List, NewType, Tuple
+from typing import Dict, List, NewType, Optional, Tuple
 
 from common_methods import date_to_datetime
 
 
-Deque = NewType("Deque", Tuple[datetime, str])
+Deque = NewType("Deque", List[Tuple[datetime, str]])
+
+
 def feature_3(queue: Deque,
               most_active_heap: List[Tuple[int, str]],
               parsed_line: Dict[str, str],
               top_n: int,
+              max_hour_count: Tuple[Optional[datetime], Optional[str], Optional[int]],
               t_delta: timedelta=timedelta(minutes=60)):
     log_timestamp = parsed_line["timestamp"]
     datetime_obj = date_to_datetime(log_timestamp)
@@ -35,12 +38,30 @@ def feature_3(queue: Deque,
         while queue[0] == min_queue:
             queue.popleft()
 
-        if len(most_active_heap) < top_n:
-            heapq.heappush(most_active_heap,
-                           (length_of_queue,
-                            min_timestamp_str))
+        if not max_hour_count:
+            max_hour_count = (min_datetime_obj,
+                              min_timestamp_str,
+                              length_of_queue)
         else:
-            if length_of_queue > most_active_heap[0][0]:
-                heapq.heappushpop(most_active_heap,
-                                  (length_of_queue,
-                                   min_timestamp_str))
+            max_time_obj, max_timestamp_str, frequency = max_hour_count
+            if (min_datetime_obj <= max_time_obj + t_delta and
+                length_of_queue > frequency):
+                max_hour_count = (min_datetime_obj,
+                                  min_timestamp_str,
+                                  length_of_queue)
+            elif (min_datetime_obj > max_time_obj + t_delta):
+                if len(most_active_heap) < top_n:
+                    heapq.heappush(most_active_heap,
+                                   (frequency,
+                                    max_timestamp_str))
+                else:
+                    if frequency > most_active_heap[0][0]:
+                        heapq.heappushpop(most_active_heap,
+                                          (frequency,
+                                           max_timestamp_str))
+
+                max_hour_count = (min_datetime_obj,
+                                  min_timestamp_str,
+                                  length_of_queue)
+    print(max_hour_count)
+    return max_hour_count
