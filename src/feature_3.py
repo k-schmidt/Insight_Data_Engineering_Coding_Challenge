@@ -19,6 +19,7 @@ def feature_3(queue: Deque,
               parsed_line: Dict[str, str],
               top_n: int,
               max_hour_count: Tuple[Optional[datetime], Optional[str], Optional[int]],
+              time_rollover_queue: Deque,
               t_delta: timedelta=timedelta(minutes=60)):
     log_timestamp = parsed_line["timestamp"]
     datetime_obj = date_to_datetime(log_timestamp)
@@ -31,12 +32,18 @@ def feature_3(queue: Deque,
         queue.append((datetime_obj, log_timestamp))
 
     else:
+        time_rollover_queue.append((datetime_obj, log_timestamp))
         length_of_queue = len(queue)
         min_queue = queue.popleft()
         min_datetime_obj, min_timestamp_str = min_queue
 
-        while queue[0] == min_queue:
+        while queue[0][0] == min_datetime_obj:
             queue.popleft()
+
+        while (time_rollover_queue and
+               time_rollover_queue[0][0] <= queue[0][0] + t_delta):
+            rollover = time_rollover_queue.popleft()
+            queue.append(rollover)
 
         if not max_hour_count:
             max_hour_count = (min_datetime_obj,
@@ -63,5 +70,4 @@ def feature_3(queue: Deque,
                 max_hour_count = (min_datetime_obj,
                                   min_timestamp_str,
                                   length_of_queue)
-    print(max_hour_count)
     return max_hour_count

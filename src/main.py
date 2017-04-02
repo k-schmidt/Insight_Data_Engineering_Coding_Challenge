@@ -15,6 +15,7 @@ def main(log_file: str=PATH_LOG_INPUT_FILE, top_n: int=10):
     host_trie = Trie()
     resource_trie = Trie()
     times_queue = deque()
+    time_rollover_queue = deque()
     most_active_address_heap = []
     most_active_resource_heap = []
     most_active_time_heap = []
@@ -31,12 +32,12 @@ def main(log_file: str=PATH_LOG_INPUT_FILE, top_n: int=10):
                   most_active_resource_heap,
                   parsed_line,
                   top_n)
-        print(max_hour_count)
         max_hour_count = feature_3(times_queue,
                                    most_active_time_heap,
                                    parsed_line,
                                    top_n,
-                                   max_hour_count)
+                                   max_hour_count,
+                                   time_rollover_queue)
     # print([(node.data, count) for count, node in heapq.nlargest(top_n, most_active_address_heap)])
     # print([(node.data, count) for count, node in heapq.nlargest(top_n, most_active_resource_heap)])
     print([(activity, timestamp_str) for activity, timestamp_str in heapq.nlargest(top_n, most_active_time_heap)])
