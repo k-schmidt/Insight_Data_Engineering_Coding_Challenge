@@ -7,7 +7,7 @@ Insight Data Engineering Coding Challenge
 from datetime import datetime
 import heapq
 import re
-from typing import Dict, Generator, List, Tuple
+from typing import Dict, Generator, List, Optional, Tuple
 
 from trie import Node
 
@@ -125,6 +125,40 @@ def append_to_heap(node: Node,
 
 
 def date_to_datetime(timestamp_str: str) -> datetime:
+    """
+    Create datetime object from given timestamp string
+
+    Arguments:
+        timestamp_str: Timestamp in the form of:
+            %d/%b/%Y:%H:%M:%S -0400
+
+    Returns:
+        Python datetime object
+    """
     timestamp_pattern = "%d/%b/%Y:%H:%M:%S -0400"
     datetime_obj = datetime.strptime(timestamp_str, timestamp_pattern)
     return datetime_obj
+
+
+def write_top_n_heap_to_outfile(heap,
+                                outfile,
+                                top_n,
+                                sep: Optional[str]=None):
+    """
+    Given a heap in the format of (priority, data),
+    sort the heap in decreasing order.
+
+    This function is specific to features 1-3
+
+    """
+    n_largest = heapq.nlargest(top_n, heap)
+    with open(outfile, 'w') as writer:
+        if sep:
+            for priority, data in n_largest:
+                if isinstance(data, Node):  # logic for feature 1
+                    writer.write(sep.join([data.data, str(priority)]) + "\n")
+                else:  # logic for feature 3
+                    writer.write(sep.join([data, str(priority)]) + "\n")
+        else:
+            for _, node in n_largest:  # logic for feature 2
+                writer.write(node.data + "\n")
