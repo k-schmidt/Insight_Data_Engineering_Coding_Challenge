@@ -40,11 +40,11 @@ def feature_3(queue: Deque,
         min_queue = queue.popleft()
         min_datetime_obj, min_timestamp_str = min_queue
 
-        while queue[0][0] == min_datetime_obj:
+        while queue and (queue[0][0] == min_datetime_obj):
             queue.popleft()
 
-        while (time_rollover_queue and
-               time_rollover_queue[0][0] <= queue[0][0] + t_delta):
+        while not queue or (time_rollover_queue and
+                            time_rollover_queue[0][0] <= queue[0][0] + t_delta):
             rollover = time_rollover_queue.popleft()
             queue.append(rollover)
 

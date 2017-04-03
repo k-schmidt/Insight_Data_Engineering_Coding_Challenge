@@ -78,6 +78,3 @@ class TestTrie(unittest.TestCase):
         self.assertIn("T", self.trie.head)
         self.assertIn("r", self.trie.head["T"])
         self.assertIn("i", self.trie.head["T"]["r"])
-
-        print(self.trie.head)
-        print(node)
