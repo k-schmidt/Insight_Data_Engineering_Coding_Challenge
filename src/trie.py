@@ -9,23 +9,21 @@ from typing import Optional
 
 class Node(dict):
 
-    def __init__(self, label: Optional[str]=None, data: Optional[int]=None):
+    def __init__(self, label: Optional[str]=None):
         self.label = label
-        self.data = data
         self.count = 0
         self.is_in_heap = False
 
-    def add_child(self, key: str, data: Optional[str]=None):
-        self[key] = Node(key, data)
+    def add_child(self, key: str):
+        self[key] = Node(key)
 
-    def increment_priority(self, priority_incrementer):
+    def increment_priority(self, priority_incrementer: int):
         self.count += priority_incrementer
 
     def __repr__(self):
         if not self.keys():
-            return "Node(label={}, data={}, count={}, is_in_heap={}"\
+            return "Node(label={}, count={}, is_in_heap={}"\
                 .format(self.label,
-                        self.data,
                         self.count,
                         self.is_in_heap)
         else:
@@ -59,5 +57,4 @@ class Trie:
                 index += 1
 
         current_node.increment_priority(priority_incrementer)
-        current_node.data = item
-        return current_node
+        return current_node, item

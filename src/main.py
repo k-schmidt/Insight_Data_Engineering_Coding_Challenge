@@ -3,8 +3,7 @@ import heapq
 import re
 
 from common_methods import (gen_data_rows,
-                            parse_log_row,
-                            write_top_n_heap_to_outfile)
+                            parse_log_row)
 from config import (PATH_LOG_INPUT_FILE,
                     regex_pattern,
                     PATH_ACTIVE_ADDRESSES,
@@ -12,14 +11,14 @@ from config import (PATH_LOG_INPUT_FILE,
                     PATH_ACTIVE_TIME,
                     PATH_BLOCKED_USER_LOG,
                     PATH_LOG_TEST_FILE)
-from feature_1 import feature_1
-from feature_2 import feature_2
-from feature_3 import feature_3
+from feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
+from feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
+from feature_3 import feature_3, write_top_n_heap_to_outfile as write_feature_3
 from feature_4 import feature_4
 from trie import Trie
 
 
-def main(log_file: str=PATH_LOG_TEST_FILE,
+def main(log_file: str=PATH_LOG_INPUT_FILE,
          most_active_addresses_outfile: str=PATH_ACTIVE_ADDRESSES,
          most_active_resources_outfile: str=PATH_ACTIVE_RESOURCES,
          most_active_time_outfile: str=PATH_ACTIVE_TIME,
@@ -63,17 +62,15 @@ def main(log_file: str=PATH_LOG_TEST_FILE,
                          blocked_users):
                 blocked_users_writer.write(line)
 
-    write_top_n_heap_to_outfile(most_active_address_heap,
-                                most_active_addresses_outfile,
-                                top_n,
-                                sep=",")
-    write_top_n_heap_to_outfile(most_active_resource_heap,
-                                most_active_resources_outfile,
-                                top_n)
-    write_top_n_heap_to_outfile(most_active_time_heap,
-                                most_active_time_outfile,
-                                top_n,
-                                sep=",")
+    write_feature_1(most_active_address_heap,
+                    most_active_addresses_outfile,
+                    top_n)
+    write_feature_2(most_active_resource_heap,
+                    most_active_resources_outfile,
+                    top_n)
+    write_feature_3(most_active_time_heap,
+                    most_active_time_outfile,
+                    top_n)
 
 if __name__ == '__main__':
     main()

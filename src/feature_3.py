@@ -74,3 +74,13 @@ def feature_3(queue: Deque,
                                   min_timestamp_str,
                                   length_of_queue)
     return max_hour_count
+
+
+def write_top_n_heap_to_outfile(heap,
+                                outfile,
+                                top_n,
+                                sep=","):
+    n_largest = heapq.nlargest(top_n, heap)
+    with open(outfile, 'w') as writer:
+        for priority, data in n_largest:
+            writer.write(sep.join([data, str(priority)]) + "\n")
