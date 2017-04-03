@@ -22,7 +22,7 @@ def gen_data_rows(log_file: str) -> Generator[str, None, None]:
     Returns:
         Line of log file
     """
-    with open(log_file, 'r', encoding="ISO-8859-1") as stream:
+    with open(log_file, 'r', encoding="ISO-8859-1", errors="ignore") as stream:
         for line in stream:
             yield line
 
@@ -39,7 +39,10 @@ def parse_log_row(log_line: str, compiled_regex) -> Dict[str, str]:
         Parsed log file
     """
     regex_object = re.search(compiled_regex, log_line)
-    line_dict = regex_object.groupdict()
+    try:
+        line_dict = regex_object.groupdict()
+    except AttributeError:
+        raise AttributeError
     return line_dict
 
 
@@ -151,6 +154,7 @@ def write_top_n_heap_to_outfile(heap,
 
     This function is specific to features 1-3
 
+    Side Effect: Write to outfile
     """
     n_largest = heapq.nlargest(top_n, heap)
     with open(outfile, 'w') as writer:

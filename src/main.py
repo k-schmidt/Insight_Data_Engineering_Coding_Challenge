@@ -10,7 +10,8 @@ from config import (PATH_LOG_INPUT_FILE,
                     PATH_ACTIVE_ADDRESSES,
                     PATH_ACTIVE_RESOURCES,
                     PATH_ACTIVE_TIME,
-                    PATH_BLOCKED_USER_LOG)
+                    PATH_BLOCKED_USER_LOG,
+                    PATH_LOG_TEST_FILE)
 from feature_1 import feature_1
 from feature_2 import feature_2
 from feature_3 import feature_3
@@ -18,7 +19,7 @@ from feature_4 import feature_4
 from trie import Trie
 
 
-def main(log_file: str=PATH_LOG_INPUT_FILE,
+def main(log_file: str=PATH_LOG_TEST_FILE,
          most_active_addresses_outfile: str=PATH_ACTIVE_ADDRESSES,
          most_active_resources_outfile: str=PATH_ACTIVE_RESOURCES,
          most_active_time_outfile: str=PATH_ACTIVE_TIME,
@@ -38,8 +39,11 @@ def main(log_file: str=PATH_LOG_INPUT_FILE,
     with open(blocked_users_outfile, 'w') as blocked_users_writer:
 
         for line in gen_data_rows(log_file):
-            # print(line)
-            parsed_line = parse_log_row(line, compiled_regex)
+            # print(type(line))
+            try:
+                parsed_line = parse_log_row(line, compiled_regex)
+            except AttributeError:
+                continue
             feature_1(host_trie,
                       most_active_address_heap,
                       parsed_line,

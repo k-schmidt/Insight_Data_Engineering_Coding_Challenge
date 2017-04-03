@@ -22,7 +22,10 @@ def feature_3(queue: Deque,
               time_rollover_queue: Deque,
               t_delta: timedelta=timedelta(minutes=60)):
     log_timestamp = parsed_line["timestamp"]
-    datetime_obj = date_to_datetime(log_timestamp)
+    try:
+        datetime_obj = date_to_datetime(log_timestamp)
+    except ValueError:
+        return
     if not queue:
         queue.append((datetime_obj, log_timestamp))
         return
