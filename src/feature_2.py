@@ -5,7 +5,7 @@ Kyle Schmidt
 Insight Data Engineering Coding Challenge
 """
 import heapq
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from common_methods import (append_to_heap,
                             format_bytes,
@@ -15,7 +15,7 @@ from trie import Node, Trie
 
 def feature_2(resource_trie: Trie,
               most_active_heap: List[Tuple[int, Node]],
-              parsed_line: str,
+              parsed_line: Dict[str, str],
               top_n: int) -> None:
     request = parsed_line["request"]
     if not is_valid_crud(request):  # Skip poorly formatted requests
