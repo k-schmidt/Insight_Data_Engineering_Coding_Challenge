@@ -56,7 +56,7 @@ def is_valid_crud(request: str) -> bool:
         Boolean if request is valid or not
     """
     valid_crud = {"GET", "POST", "PATCH", "PUT", "DELETE"}
-    beginning_of_request = request[:6]
+    beginning_of_request = request[:6]  # We don't need to check entire request
     if len(list(filter(lambda x: x in beginning_of_request, valid_crud))) == 1:
         return True
     return False
@@ -124,18 +124,19 @@ def append_to_heap(node: Node,
                 popped_node.is_in_heap = False
 
 
-def date_to_datetime(timestamp_str: str) -> datetime:
+def date_to_datetime(timestamp_str: str,
+                     timestamp_pattern: str="%d/%b/%Y:%H:%M:%S -0400") -> datetime:
     """
     Create datetime object from given timestamp string
 
     Arguments:
-        timestamp_str: Timestamp in the form of:
-            %d/%b/%Y:%H:%M:%S -0400
+        timestamp_str: Timestamp string
+        timestamp_pattern: Format of timestamp to expect
+            default: %d/%b/%Y:%H:%M:%S -0400
 
     Returns:
         Python datetime object
     """
-    timestamp_pattern = "%d/%b/%Y:%H:%M:%S -0400"
     datetime_obj = datetime.strptime(timestamp_str, timestamp_pattern)
     return datetime_obj
 

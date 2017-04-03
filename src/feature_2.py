@@ -1,3 +1,9 @@
+"""
+Feature 2
+
+Kyle Schmidt
+Insight Data Engineering Coding Challenge
+"""
 import heapq
 from typing import List, Tuple
 
@@ -7,12 +13,12 @@ from common_methods import (append_to_heap,
 from trie import Node, Trie
 
 
-def feature_2(resource_trie,
+def feature_2(resource_trie: Trie,
               most_active_heap: List[Tuple[int, Node]],
               parsed_line: str,
               top_n: int) -> None:
     request = parsed_line["request"]
-    if not is_valid_crud(request):
+    if not is_valid_crud(request):  # Skip poorly formatted requests
         return
     split_request = request.split()
     resource = split_request[1]

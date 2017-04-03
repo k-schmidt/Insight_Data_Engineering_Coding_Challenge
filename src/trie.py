@@ -1,7 +1,10 @@
 """
 Trie Implementation
+
+Kyle Schmidt
+Insight Data Engineering Coding Challenge
 """
-from typing import Optional, Union
+from typing import Optional
 
 
 class Node(dict):

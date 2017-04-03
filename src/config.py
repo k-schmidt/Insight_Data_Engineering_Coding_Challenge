@@ -13,5 +13,11 @@ PATH_ACTIVE_ADDRESSES = os.path.join(PATH_LOG_OUTPUT, "hosts.txt")
 PATH_ACTIVE_RESOURCES = os.path.join(PATH_LOG_OUTPUT, "resources.txt")
 PATH_ACTIVE_TIME = os.path.join(PATH_LOG_OUTPUT, "hours.txt")
 PATH_BLOCKED_USER_LOG = os.path.join(PATH_LOG_OUTPUT, "blocked.txt")
+PATH_LOG_TEST_FILE = os.path.join(PATH_ROOT,
+                                  "insight_testsuite",
+                                  "tests",
+                                  "test_features",
+                                  "log_input",
+                                  "log.txt")
 
 regex_pattern = r"(?P<host>(.*)) - - \[(?P<timestamp>(.*))\] \"(?P<request>(.*))\" (?P<http_reply_code>(\d{3})) (?P<bytes_transferred>(.*))"
