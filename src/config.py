@@ -1,5 +1,8 @@
 """
 Configuration file for global variables
+
+Kyle Schmidt
+Insight Data Engineering Coding Challenge
 """
 import os
 

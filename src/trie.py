@@ -21,6 +21,18 @@ class Node(dict):
     def increment_priority(self, priority_incrementer):
         self.count += priority_incrementer
 
+    def __repr__(self):
+        if not self.keys():
+            return "Node(label={}, data={}, count={}, is_in_heap={}"\
+                .format(self.label,
+                        self.data,
+                        self.count,
+                        self.is_in_heap)
+        else:
+            return "Node({})".format([(key, value)
+                                      for key, value
+                                      in self.items()])
+
 
 class Trie:
 
