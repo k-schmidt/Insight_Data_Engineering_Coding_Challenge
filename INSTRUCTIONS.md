@@ -1,13 +1,13 @@
 # Table of Contents
-1. [Challenge Summary](Instructions.md#challenge-summary)
-2. [Details of Implementation](Instructions.md#details-of-implementation)
-3. [Download Data](Instructions.md#download-data)
-4. [Description of Data](Instructions.md#description-of-data)
-5. [Writing clean, scalable, and well-tested code](Instructions.md#writing-clean-scalable-and-well-tested-code)
-6. [Repo directory structure](Instructions.md#repo-directory-structure)
-7. [Testing your directory structure and output format](Instructions.md#testing-your-directory-structure-and-output-format)
-8. [Instructions to submit your solution](Instructions.md#instructions-to-submit-your-solution)
-9. [FAQ](Instructions.md#faq)
+1. [Challenge Summary](INSTRUCTIONS.md#challenge-summary)
+2. [Details of Implementation](INSTRUCTIONS.md#details-of-implementation)
+3. [Download Data](INSTRUCTIONS.md#download-data)
+4. [Description of Data](INSTRUCTIONS.md#description-of-data)
+5. [Writing clean, scalable, and well-tested code](INSTRUCTIONS.md#writing-clean-scalable-and-well-tested-code)
+6. [Repo directory structure](INSTRUCTIONS.md#repo-directory-structure)
+7. [Testing your directory structure and output format](INSTRUCTIONS.md#testing-your-directory-structure-and-output-format)
+8. [INSTRUCTIONS to submit your solution](INSTRUCTIONS.md#instructions-to-submit-your-solution)
+9. [FAQ](INSTRUCTIONS.md#faq)
 
 
 # Challenge Summary
