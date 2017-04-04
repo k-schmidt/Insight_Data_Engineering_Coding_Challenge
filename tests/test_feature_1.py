@@ -7,9 +7,9 @@ Inisght Data Engineering Coding Challenge
 import os
 from unittest import TestCase
 
-from config import PATH_TEST_ACTIVE_ADDRESSES
-from feature_1 import write_top_n_heap_to_outfile
-from trie import Node
+from src.config import PATH_TEST_ACTIVE_ADDRESSES
+from src.feature_1 import write_top_n_heap_to_outfile
+from src.pkg.trie import Node
 
 
 class TestFeature1(TestCase):

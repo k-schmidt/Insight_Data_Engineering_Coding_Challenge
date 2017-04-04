@@ -9,8 +9,8 @@ from datetime import datetime, timedelta
 import os
 from unittest import TestCase, mock
 
-from config import PATH_TEST_ACTIVE_TIME
-from feature_3 import feature_3, write_top_n_heap_to_outfile, exhaust_queue
+from src.config import PATH_TEST_ACTIVE_TIME
+from src.feature_3 import feature_3, write_top_n_heap_to_outfile, exhaust_queue
 
 
 class TestFeature3(TestCase):
@@ -48,7 +48,7 @@ class TestFeature3(TestCase):
     def tearDown(self):
         pass
 
-    @mock.patch("feature_3.date_to_datetime", side_effect=ValueError)
+    @mock.patch("src.feature_3.date_to_datetime", side_effect=ValueError)
     def test_return_none_value_error(self, mock_value_error):
         """
         Testing lines 25-28
@@ -92,8 +92,8 @@ class TestFeature3(TestCase):
         self.assertEqual(len(self.deque), 2)
         self.assertEqual(self.deque[-1], (self.datetime_obj, self.timestamp))
 
-    @mock.patch("feature_3.exhaust_queue")
-    @mock.patch("feature_3.date_to_datetime")
+    @mock.patch("src.feature_3.exhaust_queue")
+    @mock.patch("src.feature_3.date_to_datetime")
     def test_new_record_greater_than_min(self,
                                          mock_datetime_obj,
                                          mock_exhaust_queue):

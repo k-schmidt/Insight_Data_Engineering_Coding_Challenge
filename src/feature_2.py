@@ -7,10 +7,10 @@ Insight Data Engineering Coding Challenge
 import heapq
 from typing import Dict, List, Tuple
 
-from common_methods import (append_to_heap,
-                            format_bytes,
-                            is_valid_crud)
-from trie import Node, Trie
+from .pkg.common_methods import (append_to_heap,
+                                 format_bytes,
+                                 is_valid_crud)
+from .pkg.trie import Node, Trie
 
 
 def feature_2(resource_trie: Trie,

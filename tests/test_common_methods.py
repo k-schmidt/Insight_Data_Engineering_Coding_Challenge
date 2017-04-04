@@ -5,24 +5,23 @@ Kyle Schmidt
 Inisght Data Engineering Coding Challenge
 """
 from datetime import datetime
-import os
 import re
 import unittest
 from unittest import mock
 
-from config import (PATH_TEST_DATA,
-                    PATH_TEST_ACTIVE_ADDRESSES,
-                    PATH_TEST_ACTIVE_RESOURCES,
-                    PATH_TEST_ACTIVE_TIME,
-                    PATH_BLOCKED_USER_LOG,
-                    PATH_TEST_DIR)
-from common_methods import (gen_data_rows,
-                            append_to_heap,
-                            date_to_datetime,
-                            parse_log_row,
-                            is_valid_crud,
-                            format_bytes)
-from trie import Node
+from src.config import (PATH_TEST_DATA,
+                        PATH_TEST_ACTIVE_ADDRESSES,
+                        PATH_TEST_ACTIVE_RESOURCES,
+                        PATH_TEST_ACTIVE_TIME,
+                        PATH_BLOCKED_USER_LOG,
+                        PATH_TEST_DIR)
+from src.pkg.common_methods import (gen_data_rows,
+                                    append_to_heap,
+                                    date_to_datetime,
+                                    parse_log_row,
+                                    is_valid_crud,
+                                    format_bytes)
+from src.pkg.trie import Node
 
 
 class TestCommonMethods(unittest.TestCase):
@@ -123,7 +122,7 @@ class TestCommonMethods(unittest.TestCase):
                       self.node_heap)
         self.assertTrue(test_node.is_in_heap)
 
-    @mock.patch("common_methods.heapq.heapify")
+    @mock.patch("src.pkg.common_methods.heapq.heapify")
     def test_node_in_heap_append_to_heap(self, mock_heapify):
         top_n = 10
         self.assertEqual(self.node_in_heap.count, 1)
@@ -138,7 +137,7 @@ class TestCommonMethods(unittest.TestCase):
         self.assertEqual(self.node_in_heap.count, 100)
         mock_heapify.assert_called_with(self.node_heap)
 
-    @mock.patch("common_methods.heapq.heapify")
+    @mock.patch("src.pkg.common_methods.heapq.heapify")
     def test_append_node_in_heap_larger_than_n(self, mock_heapify):
         self.node_in_heap.count = 100
         append_to_heap(self.node_in_heap,
@@ -162,7 +161,7 @@ class TestCommonMethods(unittest.TestCase):
         self.assertTrue(test_node.is_in_heap)
         self.assertFalse(self.node_in_heap)
 
-    @mock.patch("common_methods.heapq.heappushpop")
+    @mock.patch("src.pkg.common_methods.heapq.heappushpop")
     def test_append_node_heap_heappushpop(self, mock_heappushpop):
         mock_heappushpop.return_value = (self.node_in_heap.count,
                                          self.node_in_heap,

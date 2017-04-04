@@ -6,7 +6,7 @@ Insight Data Engineering Coding Challenge
 """
 import unittest
 
-from trie import Node, Trie
+from src.pkg.trie import Node, Trie
 
 
 class TestTrie(unittest.TestCase):

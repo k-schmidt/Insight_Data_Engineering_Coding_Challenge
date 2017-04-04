@@ -9,7 +9,7 @@ import heapq
 import re
 from typing import Dict, Generator, List, Optional, Tuple
 
-from trie import Node
+from .trie import Node
 
 
 def gen_data_rows(log_file: str) -> Generator[str, None, None]:

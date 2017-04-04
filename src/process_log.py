@@ -9,20 +9,19 @@ import heapq
 import re
 from typing import List, Tuple
 
-from common_methods import (gen_data_rows,
-                            parse_log_row)
-from config import (PATH_LOG_INPUT_FILE,
-                    regex_pattern,
-                    PATH_ACTIVE_ADDRESSES,
-                    PATH_ACTIVE_RESOURCES,
-                    PATH_ACTIVE_TIME,
-                    PATH_BLOCKED_USER_LOG)
-from feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
-from feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
-from feature_3 import feature_3, exhaust_queue, write_top_n_heap_to_outfile as write_feature_3
-from feature_4 import feature_4
-from trie import Trie
-
+from .config import (PATH_LOG_INPUT_FILE,
+                     regex_pattern,
+                     PATH_ACTIVE_ADDRESSES,
+                     PATH_ACTIVE_RESOURCES,
+                     PATH_ACTIVE_TIME,
+                     PATH_BLOCKED_USER_LOG)
+from .feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
+from .feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
+from .feature_3 import feature_3, exhaust_queue, write_top_n_heap_to_outfile as write_feature_3
+from .feature_4 import feature_4
+from .pkg.common_methods import (gen_data_rows,
+                                 parse_log_row)
+from .pkg.trie import Trie
 
 def write_features(address_heap: List[Tuple[int, Node, str]],
                    address_outfile: str,
