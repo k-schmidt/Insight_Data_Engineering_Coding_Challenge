@@ -4,6 +4,7 @@ Test Feature 2
 Kyle Schmidt
 Insight Data Engineering Coding Challenge
 """
+import os
 import unittest
 from unittest import mock
 
@@ -16,7 +17,7 @@ class TestFeature2(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        open(PATH_TEST_ACTIVE_RESOURCES, 'w').close()
 
     @classmethod
     def tearDownClass(cls):
@@ -38,7 +39,7 @@ class TestFeature2(unittest.TestCase):
                           (7, Node("t"), "Insight")]
 
     def tearDown(self):
-        pass
+        os.remove(PATH_TEST_ACTIVE_RESOURCES)
 
     @mock.patch("feature_2.Trie")
     def test_feature_2_return_none(self, mock_trie):

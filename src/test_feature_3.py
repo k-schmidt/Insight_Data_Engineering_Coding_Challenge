@@ -6,6 +6,7 @@ Inisght Data Engineering Coding Challenge
 """
 from collections import deque
 from datetime import datetime, timedelta
+import os
 from unittest import TestCase, mock
 
 from config import PATH_TEST_ACTIVE_TIME
@@ -26,10 +27,11 @@ class TestFeature3(TestCase):
         cls.top_n = 6
         cls.datetime_obj = datetime.strptime(cls.expected_dict["timestamp"],
                                              cls.timestamp_pattern)
+        open(PATH_TEST_ACTIVE_TIME, 'w').close()
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        os.remove(PATH_TEST_ACTIVE_TIME)
 
     def setUp(self):
         self.deque = deque()

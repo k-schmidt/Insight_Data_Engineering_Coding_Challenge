@@ -48,6 +48,12 @@ def write_top_n_heap_to_outfile(heap,
     """
     Write top_n of heap to outfile, comma separated
     values of the item in the heap and its priority
+
+    Arguments:
+        heap: Heap of top_n observations
+        outfile: Path to file to write to
+        top_n: Number of top elements to take from heap
+        sep: File delimiter
     """
     n_largest = heapq.nlargest(top_n, heap)
     with open(outfile, 'w') as writer:

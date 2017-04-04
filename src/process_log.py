@@ -1,6 +1,13 @@
+"""
+Main module
+
+Kyle Schmidt
+Insight Data Engineering Coding Challenge
+"""
 from collections import defaultdict, deque
 import heapq
 import re
+from typing import List, Tuple
 
 from common_methods import (gen_data_rows,
                             parse_log_row)
@@ -9,13 +16,42 @@ from config import (PATH_LOG_INPUT_FILE,
                     PATH_ACTIVE_ADDRESSES,
                     PATH_ACTIVE_RESOURCES,
                     PATH_ACTIVE_TIME,
-                    PATH_BLOCKED_USER_LOG,
-                    PATH_LOG_TEST_FILE)
+                    PATH_BLOCKED_USER_LOG)
 from feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
 from feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
 from feature_3 import feature_3, exhaust_queue, write_top_n_heap_to_outfile as write_feature_3
 from feature_4 import feature_4
 from trie import Trie
+
+
+def write_features(address_heap: List[Tuple[int, Node, str]],
+                   address_outfile: str,
+                   resource_heap: List[Tuple[int, Node, str]],
+                   resource_outfile: str,
+                   time_heap: List[Tuple[int, Node, str]],
+                   time_outfile: str,
+                   top_n: int) -> None:
+    """
+    Write top_n of heaps to file
+
+    Arguments:
+        address_heap: Top host/IP Addresses in a heap
+        address_outfile: Path to write top addresses
+        resource_heap: Top resources in a heap
+        resource_outfile: Path to write top resources
+        time_heap: Top times in a heap
+        time_outfile: Path to write top times
+        top_n: Number of items from heap to extract
+    """
+    write_feature_1(most_active_address_heap,
+                    most_active_addresses_outfile,
+                    top_n)
+    write_feature_2(most_active_resource_heap,
+                    most_active_resources_outfile,
+                    top_n)
+    write_feature_3(most_active_time_heap,
+                    most_active_time_outfile,
+                    top_n)
 
 
 def main(log_file: str=PATH_LOG_INPUT_FILE,
@@ -66,15 +102,13 @@ def main(log_file: str=PATH_LOG_INPUT_FILE,
                       top_n,
                       time_rollover_queue)
 
-    write_feature_1(most_active_address_heap,
-                    most_active_addresses_outfile,
-                    top_n)
-    write_feature_2(most_active_resource_heap,
-                    most_active_resources_outfile,
-                    top_n)
-    write_feature_3(most_active_time_heap,
-                    most_active_time_outfile,
-                    top_n)
+    write_features(most_active_address_heap,
+                   most_active_addresses_outfile,
+                   most_active_resource_heap,
+                   most_active_resources_outfile,
+                   most_active_time_heap,
+                   most_active_time_outfile,
+                   top_n)
 
 if __name__ == '__main__':
     main()

@@ -39,17 +39,10 @@ class TestCommonMethods(unittest.TestCase):
                              "http_reply_code": "200",
                              "bytes_transferred": "6245"}
         cls.timestamp_pattern = "%d/%b/%Y:%H:%M:%S -0400"
-        if not os.path.exists(PATH_TEST_DIR):
-            os.makedirs(PATH_TEST_DIR)
-        open(PATH_TEST_ACTIVE_ADDRESSES, 'w').close()
-        open(PATH_TEST_ACTIVE_RESOURCES, 'w').close()
-        open(PATH_TEST_ACTIVE_TIME, 'w').close()
 
     @classmethod
     def tearDownClass(cls):
-        os.remove(PATH_TEST_ACTIVE_ADDRESSES)
-        os.remove(PATH_TEST_ACTIVE_RESOURCES)
-        os.remove(PATH_TEST_ACTIVE_TIME)
+        pass
 
     def setUp(self):
         self.node_in_heap = Node("a")

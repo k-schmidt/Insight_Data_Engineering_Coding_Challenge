@@ -4,6 +4,7 @@ Unit tests for feature 1
 Kyle Schmidt
 Inisght Data Engineering Coding Challenge
 """
+import os
 from unittest import TestCase
 
 from config import PATH_TEST_ACTIVE_ADDRESSES
@@ -11,11 +12,11 @@ from feature_1 import write_top_n_heap_to_outfile
 from trie import Node
 
 
-class TestCommonMethods(TestCase):
+class TestFeature1(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        open(PATH_TEST_ACTIVE_ADDRESSES, 'w').close()
 
     @classmethod
     def tearDownClass(cls):
@@ -36,7 +37,7 @@ class TestCommonMethods(TestCase):
                           (7, Node("t"), "Insight")]
 
     def tearDown(self):
-        pass
+        os.remove(PATH_TEST_ACTIVE_ADDRESSES)
 
     def test_write_top_n_heap_to_outfile(self):
         """
