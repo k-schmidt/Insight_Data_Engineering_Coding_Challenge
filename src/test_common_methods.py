@@ -116,47 +116,6 @@ class TestCommonMethods(unittest.TestCase):
                           date_to_datetime,
                           failing_timestamp)
 
-    @unittest.skip("")
-    def test_write_top_n_heap_to_outfile(self):
-        write_top_n_heap_to_outfile(self.node_heap,
-                                    PATH_TEST_ACTIVE_ADDRESSES,
-                                    self.top_n,
-                                    sep=",")
-        write_top_n_heap_to_outfile(self.node_heap,
-                                    PATH_TEST_ACTIVE_RESOURCES,
-                                    self.top_n)
-        write_top_n_heap_to_outfile(self.data_heap,
-                                    PATH_TEST_ACTIVE_TIME,
-                                    self.top_n,
-                                    sep=",")
-        with open(PATH_TEST_ACTIVE_ADDRESSES, 'r') as results:
-            result = [line.strip()
-                      for line
-                      in results.readlines()]
-            sorted_node_heap = [",".join([item, str(priority)]).strip()
-                                for priority, node, item
-                                in sorted(self.node_heap, reverse=True)][:self.top_n]
-            self.assertEqual(result, sorted_node_heap)
-            self.assertEqual(len(result), self.top_n)
-
-        with open(PATH_TEST_ACTIVE_TIME, 'r') as results:
-            result = [line.strip()
-                      for line
-                      in results.readlines()]
-            sorted_heap = [",".join([data, str(priority)]).strip()
-                           for priority, data
-                           in sorted(self.data_heap, reverse=True)][:self.top_n]
-            self.assertEqual(result, sorted_heap)
-            self.assertEqual(len(result), self.top_n)
-
-        with open(PATH_TEST_ACTIVE_RESOURCES, 'r') as results:
-            result = [line.strip() for line in results.readlines()]
-            sorted_heap = [item.strip()
-                           for _, node, item
-                           in sorted(self.node_heap, reverse=True)][:self.top_n]
-            self.assertEqual(result, sorted_heap)
-            self.assertEqual(len(result), self.top_n)
-
     def test_heap_push_append_to_heap(self):
         test_node = Node("a")
         word = "Nasa"

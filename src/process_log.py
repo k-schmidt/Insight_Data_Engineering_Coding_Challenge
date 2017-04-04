@@ -13,7 +13,7 @@ from config import (PATH_LOG_INPUT_FILE,
                     PATH_LOG_TEST_FILE)
 from feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
 from feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
-from feature_3 import feature_3, write_top_n_heap_to_outfile as write_feature_3
+from feature_3 import feature_3, exhaust_queue, write_top_n_heap_to_outfile as write_feature_3
 from feature_4 import feature_4
 from trie import Trie
 
@@ -32,13 +32,12 @@ def main(log_file: str=PATH_LOG_INPUT_FILE,
     most_active_address_heap = []
     most_active_resource_heap = []
     most_active_time_heap = []
-    max_hour_count = (None, None, None)
     user_dict = defaultdict(deque)
     blocked_users = dict()
+
     with open(blocked_users_outfile, 'w') as blocked_users_writer:
 
         for line in gen_data_rows(log_file):
-            # print(type(line))
             try:
                 parsed_line = parse_log_row(line, compiled_regex)
             except AttributeError:
@@ -51,16 +50,21 @@ def main(log_file: str=PATH_LOG_INPUT_FILE,
                       most_active_resource_heap,
                       parsed_line,
                       top_n)
-            max_hour_count = feature_3(times_queue,
-                                       most_active_time_heap,
-                                       parsed_line,
-                                       top_n,
-                                       max_hour_count,
-                                       time_rollover_queue)
+            feature_3(times_queue,
+                      most_active_time_heap,
+                      parsed_line,
+                      top_n,
+                      time_rollover_queue)
             if feature_4(parsed_line,
                          user_dict,
                          blocked_users):
                 blocked_users_writer.write(line)
+
+    while times_queue:
+        exhaust_queue(times_queue,
+                      most_active_time_heap,
+                      top_n,
+                      time_rollover_queue)
 
     write_feature_1(most_active_address_heap,
                     most_active_addresses_outfile,

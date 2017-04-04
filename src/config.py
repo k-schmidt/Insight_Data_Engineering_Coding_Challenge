@@ -27,4 +27,4 @@ PATH_TEST_ACTIVE_ADDRESSES = os.path.join(PATH_TEST_DIR, "hosts.txt")
 PATH_TEST_ACTIVE_RESOURCES = os.path.join(PATH_TEST_DIR, "resources.txt")
 PATH_TEST_ACTIVE_TIME = os.path.join(PATH_TEST_DIR, "hours.txt")
 
-regex_pattern = r"(?P<host>(.*)) - - \[(?P<timestamp>(.*))\] \"(?P<request>(.*))\" (?P<http_reply_code>(\d{3})) (?P<bytes_transferred>(.*))"
+regex_pattern = r"(?P<host>(.*)) - - \[(?P<timestamp>(.*))\] (\“|\")(?P<request>(.*))(\“|\") (?P<http_reply_code>(\d{3})) (?P<bytes_transferred>(.*))"

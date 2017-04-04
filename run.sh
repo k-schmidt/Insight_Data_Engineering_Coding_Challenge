@@ -7,4 +7,4 @@
 #############################################
 
 # I'll execute my programs, with the input directory log_input and output the files in the directory log_output
-python3 ./src/main.py
+python3 ./src/process_log.py

@@ -1,18 +1,17 @@
 """
-Test Feature 2
+Unit tests for feature 1
 
 Kyle Schmidt
-Insight Data Engineering Coding Challenge
+Inisght Data Engineering Coding Challenge
 """
-import unittest
-from unittest import mock
+from unittest import TestCase
 
-from config import PATH_TEST_ACTIVE_RESOURCES
-from feature_2 import feature_2, write_top_n_heap_to_outfile
+from config import PATH_TEST_ACTIVE_ADDRESSES
+from feature_1 import write_top_n_heap_to_outfile
 from trie import Node
 
 
-class TestFeature2(unittest.TestCase):
+class TestCommonMethods(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -23,7 +22,6 @@ class TestFeature2(unittest.TestCase):
         pass
 
     def setUp(self):
-        self.failing_parsed_line = {"request": "GT /history/apollo/ HTTP/1.0"}
         self.node_in_heap = Node("a")
         self.node_word = "Data"
         self.node_in_heap.is_in_heap = True
@@ -40,28 +38,20 @@ class TestFeature2(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @mock.patch("feature_2.Trie")
-    def test_feature_2_return_none(self, mock_trie):
-        mock_trie_obj = mock_trie.return_value
-        self.assertIsNone(
-            feature_2(mock_trie_obj,
-                      self.node_heap,
-                      self.failing_parsed_line,
-                      self.top_n))
-
     def test_write_top_n_heap_to_outfile(self):
         """
-        Integration test for writing top_n heap to file
+        Integration test of writing top_n heap to file
         """
         write_top_n_heap_to_outfile(self.node_heap,
-                                    PATH_TEST_ACTIVE_RESOURCES,
-                                    self.top_n)
+                                    PATH_TEST_ACTIVE_ADDRESSES,
+                                    self.top_n,
+                                    sep=",")
 
-        with open(PATH_TEST_ACTIVE_RESOURCES, 'r') as results:
+        with open(PATH_TEST_ACTIVE_ADDRESSES, 'r') as results:
             result = [line.strip()
                       for line
                       in results.readlines()]
-            sorted_node_heap = [item.strip()
+            sorted_node_heap = [",".join([item, str(priority)]).strip()
                                 for priority, node, item
                                 in sorted(self.node_heap, reverse=True)][:self.top_n]
             self.assertEqual(result, sorted_node_heap)

@@ -8,7 +8,8 @@ from collections import deque
 from datetime import datetime, timedelta
 from unittest import TestCase, mock
 
-from feature_3 import feature_3
+from config import PATH_TEST_ACTIVE_TIME
+from feature_3 import feature_3, write_top_n_heap_to_outfile, exhaust_queue
 
 
 class TestFeature3(TestCase):
@@ -34,6 +35,13 @@ class TestFeature3(TestCase):
         self.deque = deque()
         self.heap = []
         self.time_rollover_queue = deque()
+        self.data_heap = [(1, "i"),
+                          (2, "n"),
+                          (3, "s"),
+                          (4, "i"),
+                          (5, "g"),
+                          (6, "h"),
+                          (7, "t")]
 
     def tearDown(self):
         pass
@@ -41,24 +49,25 @@ class TestFeature3(TestCase):
     @mock.patch("feature_3.date_to_datetime", side_effect=ValueError)
     def test_return_none_value_error(self, mock_value_error):
         """
-        Testing lines 29-31
+        Testing lines 25-28
+        Datetime parsing error should skip the ValueError and return None
         """
-        max_hour_count = (None, None, None)
         result = feature_3(self.deque,
                            self.heap,
                            self.expected_dict,
                            self.top_n,
-                           max_hour_count,
                            self.time_rollover_queue)
         self.assertIsNone(result)
 
     def test_empty_queue(self):
-        max_hour_count = (None, None, None)
+        """
+        Testing lines 29-31
+        If the queue is empty then we want to initialize the queue
+        """
         result = feature_3(self.deque,
                            self.heap,
                            self.expected_dict,
                            self.top_n,
-                           max_hour_count,
                            self.time_rollover_queue)
         self.assertEqual(len(self.deque), 1)
         self.assertIsNone(result)
@@ -67,136 +76,128 @@ class TestFeature3(TestCase):
     def test_date_obj_within_t_delta(self):
         """
         Testing lines 33-35
+        We keep an initial queue with only the timestamps
+        within queue[0] += 60 minutes
+
+        Append to queue if the new timestamp falls within this range
         """
-        max_hour_count = (None, None, None)
         self.deque.append((self.datetime_obj, self.timestamp))
-        result = feature_3(self.deque,
-                           self.heap,
-                           self.expected_dict,
-                           self.top_n,
-                           max_hour_count,
-                           self.time_rollover_queue)
+        feature_3(self.deque,
+                  self.heap,
+                  self.expected_dict,
+                  self.top_n,
+                  self.time_rollover_queue)
         self.assertEqual(len(self.deque), 2)
         self.assertEqual(self.deque[-1], (self.datetime_obj, self.timestamp))
-        self.assertEqual(result, max_hour_count)
 
+    @mock.patch("feature_3.exhaust_queue")
     @mock.patch("feature_3.date_to_datetime")
-    def test_new_record_greater_than_min_and_max_hour_none(self, mock_datetime_obj):
+    def test_new_record_greater_than_min(self,
+                                         mock_datetime_obj,
+                                         mock_exhaust_queue):
         """
         Testing lines 51-54
-        """
-        max_hour_count = None
-        self.deque.append((self.datetime_obj, self.timestamp))
-        deque_length = len(self.deque)
-        mock_datetime_obj.return_value = self.datetime_obj + timedelta(minutes=70)
+        Initialize max hour count for that hour.
+        We only want to log observations within an hour once.
+        We keep max hour count in order to ensure that we don't double
+        count observations within that hour.
 
-        result = feature_3(self.deque,
-                           self.heap,
-                           self.expected_dict,
-                           self.top_n,
-                           max_hour_count,
-                           self.time_rollover_queue)
-        self.assertEqual(result,
-                         (self.datetime_obj, self.timestamp, deque_length))
-        self.assertEqual(self.deque[0], (mock_datetime_obj.return_value,
-                                         self.expected_dict["timestamp"]))
-        self.assertEqual(len(self.time_rollover_queue), 0)
+        It is possible (and does occur) where a single hour is the most popular
+        over the entire range of data and therefore every top_n would be a minute
+        within that hour
+        """
+        self.deque.append((self.datetime_obj, self.timestamp))
+        mock_datetime_obj.return_value = self.datetime_obj + timedelta(
+            minutes=70)
 
-    @mock.patch("feature_3.date_to_datetime")
-    def test_new_record_within_min_and_new_max_hour(self, mock_datetime_obj):
-        """
-        Testing lines 55-61
-        """
-        max_hour_count = (self.datetime_obj + timedelta(minutes=40),
-                          "timestamp",
-                          0)
-        self.deque.append((self.datetime_obj, self.timestamp))
-        deque_length = len(self.deque)
-        mock_datetime_obj.return_value = self.datetime_obj + timedelta(minutes=70)
-        result = feature_3(self.deque,
-                           self.heap,
-                           self.expected_dict,
-                           self.top_n,
-                           max_hour_count,
-                           self.time_rollover_queue)
-        self.assertEqual(result, (self.datetime_obj,
-                                  self.timestamp,
-                                  deque_length))
+        feature_3(self.deque,
+                  self.heap,
+                  self.expected_dict,
+                  self.top_n,
+                  self.time_rollover_queue)
+        self.assertIn((mock_datetime_obj.return_value,
+                       self.timestamp),
+                      self.time_rollover_queue)
+        mock_exhaust_queue.assert_called_with(self.deque,
+                                              self.heap,
+                                              self.top_n,
+                                              self.time_rollover_queue)
 
-    @mock.patch("feature_3.date_to_datetime")
-    def test_popleft_when_equal(self, mock_datetime_obj):
+    def test_exhaust_queue_one_element(self):
         """
-        Testing lines 43 & 44
+        Testing 107-111 doesn't execute
+        Push item to heap once it is popped from queue
         """
-        max_hour_count = None
-        mock_datetime_obj.return_value = self.datetime_obj + timedelta(minutes=70)
         self.deque.append((self.datetime_obj, self.timestamp))
-        self.deque.append((self.datetime_obj, self.timestamp))
-        deque_length = len(self.deque)
-        result = feature_3(self.deque,
-                           self.heap,
-                           self.expected_dict,
-                           self.top_n,
-                           max_hour_count,
-                           self.time_rollover_queue)
-        self.assertEqual(result, (self.datetime_obj,
-                                  self.timestamp,
-                                  deque_length))
+        exhaust_queue(self.deque,
+                      self.heap,
+                      self.top_n,
+                      self.time_rollover_queue)
+        self.assertEqual(len(self.deque),
+                         0)
+        self.assertEqual(self.heap[0],
+                         (1, self.timestamp))
+        self.assertEqual(len(self.time_rollover_queue),
+                         0)
 
-    @mock.patch("feature_3.date_to_datetime")
-    def test_coordinating_queues(self, mock_datetime_obj):
+    def test_exhaust_queue_time_rollover(self):
         """
-        Testing lines 43-49
+        Testing lines 107-111
+        Testing coordinating queues between queue and time_rollover queue
         """
-        max_hour_count = None
-        mock_datetime_obj.return_value = self.datetime_obj + timedelta(minutes=130)
-        left_over_queue = self.datetime_obj + timedelta(minutes=40)
-        init_rollover_queue = self.datetime_obj + timedelta(minutes=70)
         self.deque.append((self.datetime_obj, self.timestamp))
-        self.deque.append((self.datetime_obj, self.timestamp))
-        self.deque.append((left_over_queue, "timestamp"))
-        deque_length = len(self.deque)
-        self.time_rollover_queue.append((init_rollover_queue, "timestamp"))
-        result = feature_3(self.deque,
-                           self.heap,
-                           self.expected_dict,
-                           self.top_n,
-                           max_hour_count,
-                           self.time_rollover_queue)
-        self.assertEqual(result,
-                         (self.datetime_obj,
-                          self.timestamp,
-                          deque_length))
-        self.assertEqual(len(self.deque), 2)
-        self.assertEqual(self.deque[0], (left_over_queue, "timestamp"))
-        self.assertEqual(self.deque[-1], (init_rollover_queue, "timestamp"))
-        self.assertEqual(len(self.time_rollover_queue), 1)
-        self.assertEqual(self.time_rollover_queue[0],
-                         (mock_datetime_obj.return_value,
-                          self.timestamp))
+        self.time_rollover_queue.append((self.datetime_obj, self.timestamp))
+        self.time_rollover_queue.append((self.datetime_obj + timedelta(minutes=70),
+                                         self.timestamp))
+        exhaust_queue(self.deque,
+                      self.heap,
+                      self.top_n,
+                      self.time_rollover_queue)
+        self.assertEqual(len(self.deque),
+                         1)
+        self.assertEqual(self.heap[0],
+                         (1, self.timestamp))
+        self.assertEqual((len(self.time_rollover_queue)),
+                         1)
 
-    @mock.patch("feature_3.date_to_datetime")
-    def test_new_record_greater_than_min_and_new_max_hour(self, mock_datetime_obj):
+    def test_exhaust_queue_heappushpop(self):
         """
-        Testing lines 62-75
+        Testing lines 118-121
+        If we find a new element that should be in the heap
+        and our heap is larger than top_n then we will pop
+        the smallest from the heap and push the new element
+        into its correct position.
         """
-        max_hour_count = (self.datetime_obj,
-                          "timestamp",
-                          70)
-        self.deque.append((self.datetime_obj + timedelta(minutes=70), "timestamp"))
+        self.deque.append((self.datetime_obj, self.timestamp))
+        self.deque.append((self.datetime_obj + timedelta(minutes=20), self.timestamp))
         deque_length = len(self.deque)
-        mock_datetime_obj.return_value = self.datetime_obj + timedelta(minutes=280)
-        self.time_rollover_queue.append((self.datetime_obj + timedelta(minutes=140), "timestamp"))
-        result = feature_3(self.deque,
-                           self.heap,
-                           self.expected_dict,
-                           self.top_n,
-                           max_hour_count,
-                           self.time_rollover_queue)
-        print(self.deque)
-        print(self.time_rollover_queue)
-        self.assertEqual(result,
-                         (self.datetime_obj + timedelta(minutes=70),
-                          "timestamp",
-                          deque_length))
-        self.assertEqual(self.heap, [(70, "timestamp")])
+        first_heap_element = self.data_heap[0]
+        self.time_rollover_queue.append((self.datetime_obj, self.timestamp))
+        self.time_rollover_queue.append((self.datetime_obj + timedelta(minutes=70),
+                                         self.timestamp))
+        exhaust_queue(self.deque,
+                      self.data_heap,
+                      self.top_n,
+                      self.time_rollover_queue)
+        self.assertIn((deque_length, self.timestamp),
+                      self.data_heap)
+        self.assertNotIn(first_heap_element,
+                         self.data_heap)
+
+    def test_write_top_n_heap_to_outfile(self):
+        """
+        Integration test of writing top_n heap to file
+        """
+        write_top_n_heap_to_outfile(self.data_heap,
+                                    PATH_TEST_ACTIVE_TIME,
+                                    self.top_n,
+                                    sep=",")
+        with open(PATH_TEST_ACTIVE_TIME, 'r') as results:
+            result = [line.strip()
+                      for line
+                      in results.readlines()]
+            sorted_heap = [",".join([data, str(priority)]).strip()
+                           for priority, data
+                           in sorted(self.data_heap, reverse=True)][:self.top_n]
+            self.assertEqual(result, sorted_heap)
+            self.assertEqual(len(result), self.top_n)
