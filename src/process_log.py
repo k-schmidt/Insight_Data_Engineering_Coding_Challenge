@@ -9,19 +9,20 @@ import heapq
 import re
 from typing import List, Tuple
 
-from .config import (PATH_LOG_INPUT_FILE,
-                     regex_pattern,
-                     PATH_ACTIVE_ADDRESSES,
-                     PATH_ACTIVE_RESOURCES,
-                     PATH_ACTIVE_TIME,
-                     PATH_BLOCKED_USER_LOG)
-from .feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
-from .feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
-from .feature_3 import feature_3, exhaust_queue, write_top_n_heap_to_outfile as write_feature_3
-from .feature_4 import feature_4
-from .pkg.common_methods import (gen_data_rows,
-                                 parse_log_row)
-from .pkg.trie import Trie
+from config import (PATH_LOG_INPUT_FILE,
+                    regex_pattern,
+                    PATH_ACTIVE_ADDRESSES,
+                    PATH_ACTIVE_RESOURCES,
+                    PATH_ACTIVE_TIME,
+                    PATH_BLOCKED_USER_LOG)
+from pkg.feature_1 import feature_1, write_top_n_heap_to_outfile as write_feature_1
+from pkg.feature_2 import feature_2, write_top_n_heap_to_outfile as write_feature_2
+from pkg.feature_3 import feature_3, exhaust_queue, write_top_n_heap_to_outfile as write_feature_3
+from pkg.feature_4 import feature_4
+from pkg.common_methods import (gen_data_rows,
+                                parse_log_row)
+from pkg.trie import Node, Trie
+
 
 def write_features(address_heap: List[Tuple[int, Node, str]],
                    address_outfile: str,
@@ -42,14 +43,14 @@ def write_features(address_heap: List[Tuple[int, Node, str]],
         time_outfile: Path to write top times
         top_n: Number of items from heap to extract
     """
-    write_feature_1(most_active_address_heap,
-                    most_active_addresses_outfile,
+    write_feature_1(address_heap,
+                    address_outfile,
                     top_n)
-    write_feature_2(most_active_resource_heap,
-                    most_active_resources_outfile,
+    write_feature_2(resource_heap,
+                    resource_outfile,
                     top_n)
-    write_feature_3(most_active_time_heap,
-                    most_active_time_outfile,
+    write_feature_3(time_heap,
+                    time_outfile,
                     top_n)
 
 

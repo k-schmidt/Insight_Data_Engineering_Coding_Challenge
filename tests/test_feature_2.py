@@ -9,7 +9,7 @@ import unittest
 from unittest import mock
 
 from src.config import PATH_TEST_ACTIVE_RESOURCES
-from src.feature_2 import feature_2, write_top_n_heap_to_outfile
+from src.pkg.feature_2 import feature_2, write_top_n_heap_to_outfile
 from src.pkg.trie import Node
 
 
@@ -41,7 +41,7 @@ class TestFeature2(unittest.TestCase):
     def tearDown(self):
         os.remove(PATH_TEST_ACTIVE_RESOURCES)
 
-    @mock.patch("src.feature_2.Trie")
+    @mock.patch("src.pkg.feature_2.Trie")
     def test_feature_2_return_none(self, mock_trie):
         mock_trie_obj = mock_trie.return_value
         self.assertIsNone(

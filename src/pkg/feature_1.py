@@ -7,8 +7,8 @@ Insight Data Engineering Coding Challenge
 import heapq
 from typing import List, Tuple
 
-from .pkg.common_methods import append_to_heap
-from .pkg.trie import Node, Trie
+from .common_methods import append_to_heap
+from .trie import Node, Trie
 
 
 def feature_1(host_trie: Trie,

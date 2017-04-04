@@ -8,7 +8,7 @@ from collections import defaultdict, deque
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from src.feature_4 import feature_4
+from src.pkg.feature_4 import feature_4
 
 
 class TestFeature4(TestCase):

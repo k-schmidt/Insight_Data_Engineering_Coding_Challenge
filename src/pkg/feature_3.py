@@ -8,7 +8,7 @@ from datetime import timedelta, datetime
 import heapq
 from typing import Dict, List, NewType, Optional, Tuple
 
-from .pkg.common_methods import date_to_datetime
+from .common_methods import date_to_datetime
 
 
 Deque = NewType("Deque", List[Tuple[datetime, str]])

@@ -7,7 +7,7 @@ Insight Data Engineering Coding Challenge
 from datetime import datetime, timedelta
 from typing import Dict, List, NewType
 
-from .pkg.common_methods import date_to_datetime
+from .common_methods import date_to_datetime
 
 Deque = NewType("Deque", List[str])
 

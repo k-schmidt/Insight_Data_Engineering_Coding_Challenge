@@ -9,12 +9,7 @@ import re
 import unittest
 from unittest import mock
 
-from src.config import (PATH_TEST_DATA,
-                        PATH_TEST_ACTIVE_ADDRESSES,
-                        PATH_TEST_ACTIVE_RESOURCES,
-                        PATH_TEST_ACTIVE_TIME,
-                        PATH_BLOCKED_USER_LOG,
-                        PATH_TEST_DIR)
+from src.config import PATH_TEST_DATA
 from src.pkg.common_methods import (gen_data_rows,
                                     append_to_heap,
                                     date_to_datetime,
