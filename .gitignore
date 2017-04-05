@@ -1,2 +1,4 @@
 **__pycache__**
 log_input/log.txt
+insight_testsuite/results.txt
+insight_testsuite/temp*
