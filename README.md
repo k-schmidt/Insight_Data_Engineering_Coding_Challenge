@@ -1,8 +1,5 @@
 # Fansite Analytics Challenge
 
-Author:
-
-
 Kyle Schmidt: <kyle.a.schmidt@gmail.com>
 
 ## Table of Contents
