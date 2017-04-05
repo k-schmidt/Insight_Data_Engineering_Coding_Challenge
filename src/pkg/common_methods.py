@@ -144,3 +144,34 @@ def date_to_datetime(timestamp_str: str,
     """
     datetime_obj = datetime.strptime(timestamp_str, timestamp_pattern)
     return datetime_obj
+
+
+def sort_common(common: Dict[str, int]) -> List[Tuple[int, str]]:
+    """
+    Sort Dictionary by its value
+
+    Arguments:
+        common: Dictionary of strings to their counts
+
+    Returns:
+        Sorted list of tuples
+    """
+    return sorted([(count, time) for time, count in common.items()],
+                  reverse=True)
+
+
+def write_additional_feature(common: Dict[str, int],
+                             outfile_name: str,
+                             sep: str=",") -> None:
+    """
+    Sort Dictionary by their values and write to oufile_name
+
+    Arguments:
+        common: Dictionary of string to their counts
+        outfile_name: Name of outfile
+        sep: File delimiter
+    """
+    sorted_times = sort_common(common)
+    with open(outfile_name, 'w') as writer:
+        for count, time in sorted_times:
+            writer.write(sep.join([time, str(count)]) + "\n")

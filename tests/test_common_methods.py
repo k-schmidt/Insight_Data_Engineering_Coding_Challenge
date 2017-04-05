@@ -5,17 +5,20 @@ Kyle Schmidt
 Inisght Data Engineering Coding Challenge
 """
 from datetime import datetime
+import os
 import re
 import unittest
 from unittest import mock
 
-from src.config import PATH_TEST_DATA
+from src.config import PATH_TEST_DATA, PATH_TEST_ADDL_FEATURE_EXPORT
 from src.pkg.common_methods import (gen_data_rows,
                                     append_to_heap,
                                     date_to_datetime,
                                     parse_log_row,
                                     is_valid_crud,
-                                    format_bytes)
+                                    format_bytes,
+                                    sort_common,
+                                    write_additional_feature)
 from src.pkg.trie import Node
 
 
@@ -33,10 +36,11 @@ class TestCommonMethods(unittest.TestCase):
                              "http_reply_code": "200",
                              "bytes_transferred": "6245"}
         cls.timestamp_pattern = "%d/%b/%Y:%H:%M:%S -0400"
+        open(PATH_TEST_ADDL_FEATURE_EXPORT, 'w').close()
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        os.remove(PATH_TEST_ADDL_FEATURE_EXPORT)
 
     def setUp(self):
         self.node_in_heap = Node("a")
@@ -58,6 +62,8 @@ class TestCommonMethods(unittest.TestCase):
                           (5, "g"),
                           (6, "h"),
                           (7, "t")]
+        self.common = {"test1": 1,
+                       "test2": 2}
 
     def tearDown(self):
         pass
@@ -171,3 +177,21 @@ class TestCommonMethods(unittest.TestCase):
                        self.top_n)
         mock_heappushpop.assert_called_with(self.node_heap,
                                             (test_node.count, test_node, word))
+
+    def test_sort_common(self):
+        self.assertEqual(sort_common(self.common),
+                         [(2, "test2"), (1, "test1")])
+
+    @mock.patch("src.pkg.common_methods.sort_common")
+    def test_write_additional_features(self, mock_sort_common):
+        mock_sort_common.return_value = [(2, "test2"), (1, "test1")]
+        write_additional_feature(self.common,
+                                 PATH_TEST_ADDL_FEATURE_EXPORT)
+        with open(PATH_TEST_ADDL_FEATURE_EXPORT, 'r') as results:
+            result = [line.strip()
+                      for line
+                      in results.readlines()]
+            sorted_mock = [",".join([item, str(count)]).strip()
+                           for count, item
+                           in mock_sort_common.return_value]
+        self.assertEqual(result, sorted_mock)

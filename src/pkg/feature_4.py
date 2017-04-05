@@ -16,7 +16,8 @@ def feature_4(parsed_line: Dict[str, str],
               user_dict: Dict[str, Deque],
               blocked_users: Dict[str, datetime],
               failed_login_td: timedelta=timedelta(seconds=20),
-              blocked_td: timedelta=timedelta(minutes=5)):
+              blocked_td: timedelta=timedelta(minutes=5),
+              consecutive_failed_logins: int=3):
     """
     Detect patterns of three failed login attempts from the same IP address
     over 20 seconds so that all further attempts to the site can be blocked
@@ -74,7 +75,7 @@ def feature_4(parsed_line: Dict[str, str],
                 user_dict[host].popleft()
 
             user_dict[host].append(datetime_obj)
-            if len(user_dict[host]) == 3:
+            if len(user_dict[host]) == consecutive_failed_logins:
                 blocked_users[host] = datetime_obj
                 user_dict.pop(host)
         else:
