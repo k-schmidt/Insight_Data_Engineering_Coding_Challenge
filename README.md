@@ -101,6 +101,8 @@ This gives an idea of what times of days the website is the busiest which might 
 
 For this feature, I parse the hour from the timestamp and increment a counter for that key in the dictionary.
 
+Results are output to ```popular_times.txt```
+
 ### Feature 7
 Log the count of each day accessed and output the results in descending order.
 This feature notifies if there is a day that has higher traffic than the others.
@@ -108,3 +110,5 @@ However both this feature and feature 6 aren't helpful if the site made a big pr
 This record would skew the results and not provide an accurate measure of habitual website habits.
 
 For this feature, I parse the day from the timestamp and increment a counter for that key in the dictionary.
+
+Results are output to ```popular_days.txt```
