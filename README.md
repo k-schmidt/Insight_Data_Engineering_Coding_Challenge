@@ -37,6 +37,11 @@ List the top 10 busiest (or most frequently visited) 60-minute periods
 ### Feature 4:
 Detect patterns of three failed login attempts from the same IP address over 20 seconds so that all further attempts to the site can be blocked for 5 minutes. Log those possible security breaches.
 
+### Additional Features
+1. Most popular 60 minute window where only one timestamp can be the representative of a window.
+2. Most popular hour of the day.
+3. Most popular day of the week.
+
 ## Feature Explanations
 
 ### Feature 1:
@@ -84,3 +89,22 @@ If the person is in ```blocked_users``` and their timestamp is greater than 5 mi
 If the status is 401 then I add the host to the ```user_dict```.
 If a user in ```user_dict``` amasses 3 consecutive failed logins then they are popped from the ```user_dict``` and added to ```blocked_users```.
 If the observed status is not 401 then I remove them from ```user_dict``` effectively restarting their accumulated failed logins.
+
+### Feature 5
+I had accidentally solved feature 3 using feature 5 at first and decided to keep the implementation as an additional feature.
+I solved this feature using two queues, 1 heap, and an additional variable to keep track of the top representative of a 60 minute window.
+I then log the top 10 representatives in a heap and output the result to a file called ```non_consecutive.txt```.
+
+### Feature 6
+Log the count of each hour accessed and output the results in descending order.
+This gives an idea of what times of days the website is the busiest which might help to inform the company if servers need to be scaled up or down.
+
+For this feature, I parse the hour from the timestamp and increment a counter for that key in the dictionary.
+
+### Feature 7
+Log the count of each day accessed and output the results in descending order.
+This feature notifies if there is a day that has higher traffic than the others.
+However both this feature and feature 6 aren't helpful if the site made a big press release (for example) on a given Tuesday at 1:00pm.
+This record would skew the results and not provide an accurate measure of habitual website habits.
+
+For this feature, I parse the day from the timestamp and increment a counter for that key in the dictionary.
